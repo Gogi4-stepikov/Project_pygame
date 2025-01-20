@@ -17,6 +17,13 @@ def draw_settings_button(screen):
     screen.blit(se_text, (se_bt.x + 50, se_bt.y + 5))
     return se_bt
 
+def draw_return_button(screen):
+    se_re_text = font.render("Вернуться", True, pygame.Color("Black"))
+    se_re_bt = pygame.Rect(10, 60, se_re_text.get_width() + 100, se_re_text.get_height() // 2 + 20)
+    pygame.draw.rect(screen, pygame.Color("White"), se_bt)
+    screen.blit(se_re_text, (se_re_bt.x + 50, se_re_bt.y + 5))
+    return se_re_bt
+
 def draw_settings(screen):
     set_lbl = font.render("Настройки", True, pygame.Color("Black"))
     screen.blit(set_lbl, (width // 2 - set_lbl.get_width() // 2, height // 2 - set_lbl.get_height() // 2 - 500))
@@ -40,10 +47,10 @@ def draw_music_settings_button(screen):
 
 def draw_character_settings_button(screen):
     chr_txt = font.render("Персонаж", True, pygame.Color("Black"))
-    character_settings_button_rect = pygame.Rect(width // 2 - chr_txt.get_width() // 2 + 190, height // 2 - 120, 150, 40)
-    pygame.draw.rect(screen, pygame.Color("White"), character_settings_button_rect)
+    chr_rect = pygame.Rect(width // 2 - chr_txt.get_width() // 2 + 190, height // 2 - 120, 150, 40)
+    pygame.draw.rect(screen, pygame.Color("White"), chr_rect)
     screen.blit(chr_txt, (width // 2 - chr_txt.get_width() // 2 + 210, height // 2 - chr_txt.get_height() // 2 - 100))
-    return character_settings_button_rect
+    return chr_rect
 
 def draw_continue_button(screen):
     continue_button_rect = pygame.Rect(width // 2 - 100, height // 2 - 50, 200, 50)
@@ -52,6 +59,21 @@ def draw_continue_button(screen):
     screen.blit(continue_text, (continue_button_rect.x + 30, continue_button_rect.y + 10))
     return continue_button_rect
 
+def draw_settings_button_for_cont(screen):
+    se_cont_text = font.render("Настройки", True, pygame.Color("Black"))
+    se_cont_bt = pygame.Rect(10, 60, se_cont_text.get_width() + 100, se_cont_text.get_height() // 2 + 20)
+    pygame.draw.rect(screen, pygame.Color("White"), se_cont_bt)
+    screen.blit(se_cont_text, (se_cont_bt.x + 50, se_cont_bt.y + 5))
+    return se_cont_bt
+
+def draw_settings_button_for_cont_ret(screen):
+    se_cont_text_ret = font.render("вернуться", True, pygame.Color("Black"))
+    se_cont_bt_ret = pygame.Rect(10, 60, se_cont_text_ret.get_width() + 100, se_cont_text_ret.get_height() // 2 + 20)
+    pygame.draw.rect(screen, pygame.Color("White"), se_cont_bt_ret)
+    screen.blit(se_cont_text_ret, (se_cont_bt_ret.x + 50, se_cont_bt_ret.y + 5))
+    return se_cont_bt_ret
+
+
 pygame.init()
 size = width, height = pygame.display.Info().current_w, pygame.display.Info().current_h
 screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
@@ -59,15 +81,18 @@ font = pygame.font.Font(None, 36)
 boy_image = pygame.image.load("boy.png").convert_alpha()
 girl_image = pygame.image.load("girl.png").convert_alpha()
 image = boy_image
-character_settings_button_rect = draw_character_settings_button(screen)
-image_rect = image.get_rect(center=(character_settings_button_rect.centerx, character_settings_button_rect.bottom + image.get_height() // 2 + 20))
+chr_rect = draw_character_settings_button(screen)
+image_rect = image.get_rect(center=(chr_rect.centerx, chr_rect.bottom + image.get_height() // 2 + 20))
 bg_color = (255, 0, 0)
 current_screen = "start"
 st_bt = None
 se_bt = None
 color_settings_rect = None
 music_settings_button_rect = None
+se_re_bt = None
 continue_button_rect = None
+se_cont_bt = None
+se_cont_bt_ret = None
 running = True
 change_image = False
 while running:
@@ -78,12 +103,22 @@ while running:
     elif current_screen == "settings":
         draw_settings(screen)
         color_settings_rect = draw_color_settings_button(screen)
-        character_settings_button_rect = draw_character_settings_button(screen)
+        chr_rect = draw_character_settings_button(screen)
         music_settings_rect = draw_music_settings_button(screen)
-        image_rect = image.get_rect(center=(character_settings_button_rect.centerx, character_settings_button_rect.bottom + image.get_height() // 2 + 20))
+        image_rect = image.get_rect(center=(chr_rect.centerx, chr_rect.bottom + image.get_height() // 2 - 50))
         screen.blit(image, image_rect)
+        se_re_bt = draw_return_button(screen)
+    elif current_screen == "settings_for_cont":
+        draw_settings(screen)
+        color_settings_rect = draw_color_settings_button(screen)
+        chr_rect = draw_character_settings_button(screen)
+        music_settings_rect = draw_music_settings_button(screen)
+        image_rect = image.get_rect(center=(chr_rect.centerx, chr_rect.bottom + image.get_height() // 2 - 50))
+        screen.blit(image, image_rect)
+        se_cont_bt_ret = draw_settings_button_for_cont_ret(screen)
     elif current_screen == "continue":
         continue_button_rect = draw_continue_button(screen)
+        se_bt = draw_settings_button(screen)
     elif current_screen == "end":
         end_text = font.render("GAME OVER", True, pygame.Color("Black"))
         screen.blit(end_text, (width // 2 - end_text.get_width() // 2, height // 2 - end_text.get_height() // 2))
@@ -101,11 +136,19 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if current_screen == "start" and st_bt.collidepoint(event.pos):
                 current_screen = "continue"
+            elif current_screen == "continue" and se_cont_bt.collidepoint(event.pos):
+                current_screen = "settings_for_cont"
             elif current_screen == "start" and se_bt.collidepoint(event.pos):
                 current_screen = "settings"
-            elif current_screen == "settings" and character_settings_button_rect.collidepoint(event.pos):
+            elif current_screen == "settings" and chr_rect.collidepoint(event.pos):
                 change_image = True
             elif current_screen == "settings" and color_settings_rect.collidepoint(event.pos):
                 bg_color = random_color_change()
+            elif current_screen == "settings" and se_re_bt.collidepoint(event.pos):
+                current_screen = "start"
             elif current_screen == "continue" and continue_button_rect.collidepoint(event.pos):
                 current_screen = "end"
+                Traceback (most recent call last):
+  File "C:\Users\test344\PycharmProjects\pythonProject10\main.py", line 131, in <module>
+    elif current_screen == "continue" and se_cont_bt.collidepoint(event.pos):
+AttributeError: 'NoneType' object has no attribute 'collidepoint'
