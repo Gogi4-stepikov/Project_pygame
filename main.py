@@ -75,9 +75,6 @@ def draw_color_settings_button(screen):
     screen.blit(clr_text, (width // 2 - clr_text.get_width() // 2, height // 2 - clr_text.get_height() // 2 - 100))
     return color_settings_rect
 
-def random_color_change():
-    return random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-
 def draw_music_settings_button(screen):
     msc_txt = font.render("Музыка", True, pygame.Color("Black"))
     music_settings_button_rect = pygame.Rect(width // 2 - msc_txt.get_width() // 2 - 220, height // 2 - 120, 150, 40)
@@ -622,9 +619,6 @@ while running:
         if game_over_ttt:
             game_over_text = font.render(f"Игра окончена! Победа {check_win(board)}", True, pygame.Color("Black"))
             screen.blit(game_over_text, (width // 2 - game_over_text.get_width() // 2, 50))
-    elif current_screen == "end":
-        end_text = font.render("GAME OVER", True, pygame.Color("Black"))
-        screen.blit(end_text, (width // 2 - end_text.get_width() // 2, height // 2 - end_text.get_height() // 2))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -638,7 +632,7 @@ while running:
                 if chr_rect and chr_rect.collidepoint(event.pos):
                     change_image = True
                 if color_settings_rect and color_settings_rect.collidepoint(event.pos):
-                    bg_color = random_color_change()
+                    bg_color = random_color()
                 if music_settings_rect and music_settings_rect.collidepoint(event.pos):
                     if music_playing:
                         pygame.mixer.music.pause()
@@ -724,7 +718,7 @@ while running:
                 if chr_rect and chr_rect.collidepoint(event.pos):
                     change_image = True
                 if color_settings_rect and color_settings_rect.collidepoint(event.pos):
-                    bg_color = random_color_change()
+                    bg_color = random_color()
             elif current_screen == "games":
                 if snake_rect and snake_rect.collidepoint(event.pos):
                     current_screen = "menu_snake_game"
