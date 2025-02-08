@@ -146,13 +146,6 @@ def draw_settings_button_for_cont_ret(screen):
     screen.blit(se_cont_text_ret, (se_cont_bt_ret.x + 50, se_cont_bt_ret.y + 5))
     return se_cont_bt_ret
 
-def draw_return_button_for_snake(screen):
-    snake_ret = font.render("Вернуться", True, pygame.Color("Black"))
-    snake_rect = pygame.Rect(10, 60, snake_ret.get_width() + 100, snake_ret.get_height() // 2 + 20)
-    pygame.draw.rect(screen, pygame.Color("White"), snake_rect)
-    screen.blit(snake_ret, (snake_rect.x + 50, snake_rect.y + 5))
-    return snake_rect
-
 def draw_return_button_for_ttt(screen):
     criss_ret = font.render("Вернуться", True, pygame.Color("Black"))
     criss_rect = pygame.Rect(10, 60, criss_ret.get_width() + 100, criss_ret.get_height() // 2 + 20)
@@ -617,7 +610,6 @@ while running:
         screen.blit(snake_color_text, snake_color_text_rect.topleft)
     elif current_screen == "snake_game":
         screen.fill(snake_bg_color)
-        snake_ret_rect = draw_return_button_for_snake(screen)
         game_snake()
         if game_over_snake:
             current_screen = "continue"
